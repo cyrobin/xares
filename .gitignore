@@ -1,3 +1,10 @@
+# Folders
+tmp/
+build/
+
+# Python
+*.pyc
+
 # Compiled Object files
 *.slo
 *.lo
