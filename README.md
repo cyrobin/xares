@@ -10,7 +10,7 @@ Perform exploration planning, while using data provided by the gladys_[1] API.
 INSTALL
 -------
 
-    git clone http://trac.laas.fr/git/Xares && cd Xares
+    git clone http://trac.laas.fr/git/xares && cd xares
     mkdir build && cd build
     cmake -DCMAKE_INSTALL_PREFIX=$HOME/dev/ ..
     make -j8 && make test && make install
@@ -18,13 +18,13 @@ INSTALL
 CONTRIBUTE
 ----------
 
-Code is available on GitHub at https://github.com/cyrobin/Xares/
+Code is available on GitHub at https://github.com/cyrobin/xares/
 
 Feel free to fork, pull request or submit issues to improve the project!
 
-* https://github.com/cyrobin/Xares/fork
-* https://github.com/cyrobin/Xares/issues
-* https://github.com/cyrobin/Xares/pulls
+* https://github.com/cyrobin/xares/fork
+* https://github.com/cyrobin/xares/issues
+* https://github.com/cyrobin/xares/pulls
 * https://help.github.com/articles/fork-a-repo
 * https://help.github.com/articles/using-pull-requests
 
