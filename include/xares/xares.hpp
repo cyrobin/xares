@@ -18,9 +18,6 @@
 
 namespace xares {
 
-/*{{{ xares class
- ****************************************************************************/
-
 /* Decison making for frontier attirbutes :
  *
  * Use to sort attributes (thus frontiers) to plan exploration.
@@ -36,12 +33,15 @@ struct {//{{{
             // - size (the bigger, the better)
             // - and cost (distance) : the cheaper, the better
             // We use a ratio
-            return (r.size * r.size * l.distance ) < ( l.size * l.size * r.distance );
+            //return (r.size * r.size * l.distance ) < ( l.size * l.size * r.distance );
+            return (r.size * l.distance ) < ( l.size * r.distance );
         }
         return l.proximity < r.proximity ;
     }
 } decision_making;//}}}
 
+/*{{{ xares class
+ ****************************************************************************/
 /* xares class */
 class xares{//{{{
 
