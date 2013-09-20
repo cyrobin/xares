@@ -41,11 +41,13 @@ namespace xares {
         attributes = fd.get_attributes() ;
 
         /* choose one */
-        // sort the frontiers attributes according to a specific decision criteria
-        std::sort( attributes.begin(), attributes.end(), decision_making );
+        if ( attributes.size() > 0 ) {
+            // sort the frontiers attributes according to a specific decision criteria
+            std::sort( attributes.begin(), attributes.end(), decision_making );
 
-        goal = attributes.front().lookout ;
-        path = attributes.front().path ;
+            goal = attributes.front().lookout ;
+            path = attributes.front().path ;
+        }
 
     }//}}}
 
