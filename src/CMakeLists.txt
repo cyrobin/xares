@@ -5,7 +5,8 @@ install_pkg_config_file(xares
     DESCRIPTION "eXploration module for Autonomous Robotic Embedded Systems"
     CFLAGS
     LIBS -lxares
-    VERSION ${PACKAGE_VERSION})
+    VERSION ${PACKAGE_VERSION}
+    REQUIRES "gladys >= ${GLADYS_MIN_VERSION}")
 
 #add_executable( foo foo.cpp )
 #target_link_libraries( foo ${LIBGLADYS_LIBRARIES} ${GDAL_LIBRARIES} )
