@@ -123,6 +123,18 @@ public:
     void plan( const gladys::points_t &r_pos) ;
 
     /* getters */
+    std::array<double, 4> get_transform() const {//{{{
+        //TODO take "North up" into account
+        std::array<double, 4> transform;
+        const gladys::weight_map& map = fd.get_graph().get_map() ;
+
+        transform[0] = map.get_scale_x() ;
+        transform[1] = map.get_scale_y() ;
+        transform[2] = map.get_utm_pose_x() ;
+        transform[3] = map.get_utm_pose_y() ;
+
+        return transform;
+    }//}}}
     const std::vector< gladys::f_attributes >&  get_attributes() const {//{{{
         return attributes;
     }//}}}
