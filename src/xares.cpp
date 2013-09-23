@@ -8,37 +8,54 @@
  * license: BSD
  */
 
+#include <ostream>
+#include <exception>
+
 #include "xares/xares.hpp"
+
 
 namespace xares {
 
 /*{{{ xares class
  ****************************************************************************/
     /* constructor */
-    xares::xares() { }
-
-    xares::xares( const std::string& f_region, const std::string& f_robot_model ) {//{{{
-        fd = gladys::frontier_detector( f_region, f_robot_model );
-    }//}}}
+    xares::xares( const gladys::weight_map& _wm ) : //{{{
+        //wm(_wm), 
+        ng ( gladys::nav_graph(_wm) ),
+        fd ( gladys::frontier_detector( ng ) )
+    { }//}}}
 
     /* computing functions */
-    void xares::load( const std::string& f_region, const std::string& f_robot_model ) {//{{{
-        /* reset internal data */
-        frontiers.clear() ;
-        attributes.clear() ;
-        path.clear() ;
-        //goal ;
-
-        /* load new module */
-        fd = gladys::frontier_detector( f_region, f_robot_model );
-
-    }//}}}
+//
+//    void xares::reload( ) {//{{{
+//        /* reset internal data */
+//        frontiers.clear() ;
+//        attributes.clear() ;
+//        path.clear() ;
+//        //goal ;
+//
+//        /* load new module */
+//        ng = gladys::nav_graph( wm );
+//        fd = gladys::frontier_detector( ng );
+//
+//    }//}}}
+//
 
     void xares::plan( const gladys::points_t &r_pos) {//{{{
         /* compute frontiers and attributes */
-        fd.compute_frontiers( r_pos, max_nf, min_size, algo ) ;
+        std::cerr << "[Xares] Computing frontiers... " << std::endl ;
+        try {
+            fd.compute_frontiers( r_pos, max_nf, min_size, algo ) ;
+        } catch (std::exception& e) {
+            std::cerr << "[Xares] catch exception : " << e.what() << std::endl ;
+            std::cerr << "[Xares] Fail to compute the frontiers: please check your data." << std::endl ;
+            return;
+        }
+        std::cerr << "[Xares] frontiers computed ! :-) " << std::endl ;
 
         attributes = fd.get_attributes() ;
+
+        std::cerr << "[Xares] I got the attributes. Deciding... " << std::endl ;
 
         /* choose one */
         if ( attributes.size() > 0 ) {
@@ -48,6 +65,7 @@ namespace xares {
             goal = attributes.front().lookout ;
             path = attributes.front().path ;
         }
+        std::cerr << "[Xares] Done." << std::endl ;
 
     }//}}}
 

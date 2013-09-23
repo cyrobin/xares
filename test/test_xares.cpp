@@ -12,7 +12,8 @@
 
 #include <sstream>
 
-#include "gladys/gdal.hpp" // required to create the models
+#include "gladys/gdal.hpp"          // required to create the models
+#include "gladys/weight_map.hpp"    // required to create the models
 #include "xares/xares.hpp"
 
 BOOST_AUTO_TEST_SUITE( frontier )
@@ -73,8 +74,8 @@ BOOST_AUTO_TEST_CASE( test_frontier )
 
     // create a frontier exploration module from the map
     // (Create the weight_map, assumed to be good; cf other unit test)
-    //frontier_detector fd ( region_path, robotm_path ) ;
-    xares::xares xm ( region_path, robotm_path ) ;
+    gladys::weight_map wm( region_path, robotm_path ) ;
+    xares::xares xm ( wm ) ;
 
     // testing frontier detection with defult algorithm
     gladys::point_xy_t r1 {4,4};

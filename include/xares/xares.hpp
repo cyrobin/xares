@@ -11,9 +11,9 @@
 #define XARES_HPP
 
 #include <vector>
-//#include <ostream>
 
-//#include "gladys/point.hpp"
+#include "gladys/weight_map.hpp"
+#include "gladys/nav_graph.hpp"
 #include "gladys/frontier_exploration.hpp"
 
 namespace xares {
@@ -47,7 +47,9 @@ class xares{//{{{
 
 private :
     /* internal data */
-    gladys::frontier_detector fd ;                      // use to compute frontiers
+    //const gladys::weight_map& wm ;                       // the weight map (data)
+    gladys::nav_graph ng ;                              // nav graph (from wm)
+    gladys::frontier_detector fd ;                      // frontier detector (from ng)
 
     std::vector< gladys::points_t > frontiers ;         // the list of the frontiers
     std::vector< gladys::f_attributes > attributes ;    // the frontiers attributes
@@ -64,30 +66,23 @@ private :
     /* hidden computing functions */
 
 public:
-    xares () ;
+
     /** xares constructor
      *
-     * Create a frontier_detector which loads region and robot model
+     * Create a frontier_detector which loads the given weight map
      *
-     * @param f_region path to a region.tif file
-     * (multi-layers terrains classification probabilities, float32)
-     *
-     * @param f_robot_model to generate the weight map (at least its size)
+     * @param wm the weight_map (gladys)
      *
      */
-    xares( const std::string& f_region, const std::string& f_robot_model ) ;
+    xares( const gladys::weight_map& _wm ) ;
 
-    /** load a new frontier detect
+    /** reload new nav_graph and frontier detector
+     * (from the same weight_map, assuming it has changed)
      *
      * Reset internal data (keep the internal parameters)
      *
-     * @param f_region path to a region.tif file
-     * (multi-layers terrains classification probabilities, float32)
-     *
-     * @param f_robot_model to generate the weight map (at least its size)
-     *
      */
-    void load( const std::string& f_region, const std::string& f_robot_model ) ;
+    void reload() ;
 
     /** set the internal parameters
      *
