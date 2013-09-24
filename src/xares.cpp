@@ -21,8 +21,8 @@ namespace xares {
     /* constructor */
     xares::xares( const gladys::weight_map& _wm ) : //{{{
         //wm(_wm), 
-        ng ( gladys::nav_graph(_wm) ),
-        fd ( gladys::frontier_detector( ng ) )
+        ng ( _wm),
+        fd ( ng )
     { }//}}}
 
     /* computing functions */
