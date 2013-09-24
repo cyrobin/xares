@@ -58,17 +58,18 @@ namespace xares {
 
         std::cerr << "[Xares] Got #"<< attributes.size() <<" attributes. Deciding... " << std::endl ;
 
-        /* choose one */
-        if ( attributes.size() > 0 ) {
-            // sort the frontiers attributes according to a specific decision criteria
-            std::sort( attributes.begin(), attributes.end(), decision_making );
-
-            goal = attributes.front().lookout ;
-            path = attributes.front().path ;
-        }
-        else
+        // check is there are indeed valuable frontiers
+        if ( attributes.size() == 0 )
             return XARES_NO_FRONTIER;
 
+        /* choose one */
+        // sort the frontiers attributes according to a specific decision criteria
+        std::sort( attributes.begin(), attributes.end(), decision_making );
+
+        goal = attributes.front().lookout ;
+        path = attributes.front().path ;
+
+        std::cerr << "[Xares] Goal is : "<< attributes.front() << std::endl ;
         std::cerr << "[Xares] Done." << std::endl ;
 
         return XARES_SUCCESS;
