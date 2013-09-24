@@ -10,9 +10,9 @@
 
 #include <ostream>
 #include <exception>
+#include <limits>       // for numeric_limits::infinity
 
 #include "xares/xares.hpp"
-
 
 namespace xares {
 
@@ -28,6 +28,7 @@ namespace xares {
     /* computing functions */
 //
 //    void xares::reload( ) {//{{{
+//          //TODO
 //        /* reset internal data */
 //        frontiers.clear() ;
 //        attributes.clear() ;
@@ -41,21 +42,21 @@ namespace xares {
 //    }//}}}
 //
 
-    void xares::plan( const gladys::points_t &r_pos) {//{{{
+    xares::return_value xares::plan( const gladys::points_t &r_pos) {//{{{
         /* compute frontiers and attributes */
         std::cerr << "[Xares] Computing frontiers... " << std::endl ;
         try {
-            fd.compute_frontiers( r_pos, max_nf, min_size, algo ) ;
+            fd.compute_frontiers( r_pos, max_nf, min_size, min_dist, max_dist, algo ) ;
         } catch (std::exception& e) {
             std::cerr << "[Xares] catch exception : " << e.what() << std::endl ;
             std::cerr << "[Xares] Fail to compute the frontiers: please check your data." << std::endl ;
-            return;
+            return XARES_FAILURE;
         }
         std::cerr << "[Xares] frontiers computed ! :-) " << std::endl ;
 
         attributes = fd.get_attributes() ;
 
-        std::cerr << "[Xares] I got the attributes. Deciding... " << std::endl ;
+        std::cerr << "[Xares] Got #"<< attributes.size() <<" attributes. Deciding... " << std::endl ;
 
         /* choose one */
         if ( attributes.size() > 0 ) {
@@ -65,7 +66,12 @@ namespace xares {
             goal = attributes.front().lookout ;
             path = attributes.front().path ;
         }
+        else
+            return XARES_NO_FRONTIER;
+
         std::cerr << "[Xares] Done." << std::endl ;
+
+        return XARES_SUCCESS;
 
     }//}}}
 

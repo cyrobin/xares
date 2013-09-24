@@ -33,8 +33,8 @@ struct {//{{{
             // - size (the bigger, the better)
             // - and cost (distance) : the cheaper, the better
             // We use a ratio
-            //return (r.size * r.size * l.distance ) < ( l.size * l.size * r.distance );
-            return (r.size * l.distance ) < ( l.size * r.distance );
+            //return (r.size * r.size * l.cost) < ( l.size * l.size * r.cost);
+            return (r.size * l.cost) < ( l.size * r.cost);
         }
         return l.proximity < r.proximity ;
     }
@@ -59,13 +59,16 @@ private :
 
     /* internal parameters */
     size_t max_nf = 10 ;                                // max nbr of frontiers to consider
-    size_t min_size = 2 ;                               // minimal size of the frontier to consider
+    size_t min_size = 2 ;                               // minimal size of the frontiers to consider
     gladys::frontier_detector::algo_t algo = gladys::frontier_detector::WFD ; // algo use to compute frontiers
+    double min_dist = 1.6 ;                               // minimal cost to the frontiers to consider (meter*[1-100])
+    double max_dist = 50.0 ;                           // maximal cost to the frontiers to consider (meter*[1-100])
 
 
     /* hidden computing functions */
 
 public:
+    typedef enum { XARES_SUCCESS, XARES_NO_FRONTIER, XARES_FAILURE} return_value;
 
     /** xares constructor
      *
@@ -82,7 +85,7 @@ public:
      * Reset internal data (keep the internal parameters)
      *
      */
-    void reload() ;
+    //void reload() ;
 
     /** set the internal parameters
      *
@@ -95,13 +98,17 @@ public:
      * @param _algo : algo use to compute frontiers
      *
      */
-    void set_params(//{{{
+    int set_params(//{{{
         size_t _max_nf = 10,
         size_t _min_size = 2, 
+        double _min_dist = 1.6,
+        double _max_dist = 50.0,
         gladys::frontier_detector::algo_t _algo = gladys::frontier_detector::WFD
     ){
         max_nf      = _max_nf ;
         min_size    = _min_size ;
+        min_dist    = _min_dist ;
+        max_dist    = _max_dist ;
         algo        = _algo ;
     }//}}}
 
@@ -115,7 +122,7 @@ public:
      * is assume to be the robot running the algorithm.
      *
      */
-    void plan( const gladys::points_t &r_pos) ;
+    return_value plan( const gladys::points_t &r_pos) ;
 
     /* getters */
     std::array<double, 4> get_transform() const {//{{{
