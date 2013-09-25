@@ -81,7 +81,8 @@ BOOST_AUTO_TEST_CASE( test_frontier )
     gladys::point_xy_t r1 {4,4};
     gladys::point_xy_t r2 {4,2};
     gladys::points_t r_pos {r1, r2} ;
-    xm.plan( r_pos ) ;
+    double yaw = 0 ;
+    xm.plan( r_pos, yaw ) ;
 
     std::vector< gladys::f_attributes > attributes = xm.get_attributes() ;
 

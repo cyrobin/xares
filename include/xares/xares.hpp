@@ -16,6 +16,10 @@
 #include "gladys/nav_graph.hpp"
 #include "gladys/frontier_exploration.hpp"
 
+#ifndef YAW_DIFF_SENSIBILITY
+#define YAW_DIFF_SENSIBILITY 0.8 // about PI/4, max diff being Pi
+#endif
+
 namespace xares {
 
 /* Decison making for frontier attirbutes :
@@ -29,12 +33,15 @@ struct {//{{{
 
         // First criteria is proximity (the lesser, the better)
         if (l.proximity == r.proximity ) {
-            // 2nd & 3rd criterias are :
-            // - size (the bigger, the better)
-            // - and cost (distance) : the cheaper, the better
-            // We use a ratio
-            //return (r.size * r.size * l.cost) < ( l.size * l.size * r.cost);
-            return (r.size * l.cost) < ( l.size * r.cost);
+            // 2nd criteria is yaw difference :
+            if ( fabs( l.yaw_diff - r.yaw_diff) < YAW_DIFF_SENSIBILITY )
+                // 3rd & 4th criterias are :
+                // - size (the bigger, the better)
+                // - and cost (distance) : the cheaper, the better
+                // We use a ratio
+                //return (r.size * r.size * l.cost) < ( l.size * l.size * r.cost);
+                return (r.size * l.cost) < ( l.size * r.cost);
+            return ( l.yaw_diff < r.yaw_diff );
         }
         return l.proximity < r.proximity ;
     }
@@ -47,7 +54,7 @@ class xares{//{{{
 
 private :
     /* internal data */
-    //const gladys::weight_map& wm ;                       // the weight map (data)
+    //const gladys::weight_map& wm ;                      // the weight map (data)
     gladys::nav_graph ng ;                              // nav graph (from wm)
     gladys::frontier_detector fd ;                      // frontier detector (from ng)
 
@@ -61,9 +68,11 @@ private :
     size_t max_nf = 10 ;                                // max nbr of frontiers to consider
     size_t min_size = 2 ;                               // minimal size of the frontiers to consider
     gladys::frontier_detector::algo_t algo = gladys::frontier_detector::WFD ; // algo use to compute frontiers
-    double min_dist = 1.6 ;                               // minimal cost to the frontiers to consider (meter*[1-100])
-    double max_dist = 50.0 ;                           // maximal cost to the frontiers to consider (meter*[1-100])
+    double min_dist = 1.6 ;                             // minimal cost to the frontiers to consider (meter*[1-100])
+    double max_dist = 50.0 ;                            // maximal cost to the frontiers to consider (meter*[1-100])
 
+    bool dump = false ;                                 // enable/disable dumping 
+    std::string dumpdir = "/tmp" ;                           // path where to dump the data
 
     /* hidden computing functions */
 
@@ -112,6 +121,10 @@ public:
         algo        = _algo ;
     }//}}}
 
+    void enable_dump(){ dump = true; };
+
+    void disable_dump(){ dump = false; };
+
     /** plan a goal and a path
      *
      * Compute the frontiers with the given algorithm and parameters.
@@ -121,8 +134,10 @@ public:
      * @param r_pos : the position of all the robot in the team. The first one
      * is assume to be the robot running the algorithm.
      *
+     * @param yaw : the yaw of the robot running the algorithm.
+     *
      */
-    return_value plan( const gladys::points_t &r_pos) ;
+    return_value plan( const gladys::points_t &r_pos, double yaw );
 
     /* getters */
     std::array<double, 4> get_transform() const {//{{{

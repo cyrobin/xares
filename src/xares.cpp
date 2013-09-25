@@ -42,11 +42,11 @@ namespace xares {
 //    }//}}}
 //
 
-    xares::return_value xares::plan( const gladys::points_t &r_pos) {//{{{
+    xares::return_value xares::plan( const gladys::points_t &r_pos, double yaw ) {//{{{
         /* compute frontiers and attributes */
         std::cerr << "[Xares] Computing frontiers... " << std::endl ;
         try {
-            fd.compute_frontiers( r_pos, max_nf, min_size, min_dist, max_dist, algo ) ;
+            fd.compute_frontiers( r_pos, yaw, max_nf, min_size, min_dist, max_dist, algo ) ;
         } catch (std::exception& e) {
             std::cerr << "[Xares] catch exception : " << e.what() << std::endl ;
             std::cerr << "[Xares] Fail to compute the frontiers: please check your data." << std::endl ;
