@@ -97,13 +97,12 @@ BOOST_AUTO_TEST_CASE( test_frontier )
    BOOST_CHECK_EQUAL( c , 18 );
 
    // Goal should be (4,7) (the bottom frontier) and path size = 7
-   gladys::point_xy_t goal = xm.get_goal() ;
+   gladys::point_xy_t goal = xm.get_goal().lookout ;
    BOOST_TEST_MESSAGE( "Goal is ? " <<  goal[0] << "," << goal[1] );
    BOOST_CHECK_EQUAL( goal[0], 4 );
    BOOST_CHECK_EQUAL( goal[1], 7 );
-   BOOST_TEST_MESSAGE( "Path to the goal has size : " << xm.get_path().size() );
-   BOOST_CHECK_EQUAL( xm.get_path().size(), 7 );
-
+   BOOST_TEST_MESSAGE( "Path to the goal has size : " << xm.get_goal().path.size() );
+   BOOST_CHECK_EQUAL( xm.get_goal().path.size(), 7 );
 
 }
 

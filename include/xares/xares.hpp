@@ -54,15 +54,14 @@ class xares{//{{{
 
 private :
     /* internal data */
-    //const gladys::weight_map& wm ;                      // the weight map (data)
+    //const gladys::weight_map& wm ;                    // the weight map (data)
     gladys::nav_graph ng ;                              // nav graph (from wm)
     gladys::frontier_detector fd ;                      // frontier detector (from ng)
 
     std::vector< gladys::points_t > frontiers ;         // the list of the frontiers
     std::vector< gladys::f_attributes > attributes ;    // the frontiers attributes
 
-    gladys::point_xy_t goal ;                           // the current goal chosen by the planner
-    gladys::path_t path ;                               // the path to the goal
+    gladys::f_attributes goal ;                         // the current goal chosen by the planner
 
     /* internal parameters */
     size_t max_nf = 10 ;                                // max nbr of frontiers to consider
@@ -155,11 +154,8 @@ public:
     const std::vector< gladys::f_attributes >&  get_attributes() const {//{{{
         return attributes;
     }//}}}
-    const gladys::point_xy_t& get_goal() const {//{{{
+    const gladys::f_attributes& get_goal() const {//{{{
         return goal;
-    }//}}}
-    const gladys::path_t& get_path() const {//{{{
-        return path;
     }//}}}
 
 };//}}}

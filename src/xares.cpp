@@ -66,10 +66,12 @@ namespace xares {
         // sort the frontiers attributes according to a specific decision criteria
         std::sort( attributes.begin(), attributes.end(), decision_making );
 
-        goal = attributes.front().lookout ;
-        path = attributes.front().path ;
+        goal = attributes.front() ;
 
-        std::cerr << "[Xares] Goal is : "<< attributes.front() << std::endl ;
+        /* transform coordinates into the global references */
+
+        /* the end */
+        std::cerr << "[Xares] Goal is : "<< goal << std::endl ;
         std::cerr << "[Xares] Done." << std::endl ;
 
         return XARES_SUCCESS;
