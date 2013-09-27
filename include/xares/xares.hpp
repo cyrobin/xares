@@ -64,14 +64,14 @@ private :
     gladys::f_attributes goal ;                         // the current goal chosen by the planner
 
     /* internal parameters */
-    size_t max_nf = 10 ;                                // max nbr of frontiers to consider
-    size_t min_size = 2 ;                               // minimal size of the frontiers to consider
-    gladys::frontier_detector::algo_t algo = gladys::frontier_detector::WFD ; // algo use to compute frontiers
-    double min_dist = 1.6 ;                             // minimal cost to the frontiers to consider (meter*[1-100])
-    double max_dist = 50.0 ;                            // maximal cost to the frontiers to consider (meter*[1-100])
+    size_t max_nf ;                               // max nbr of frontiers to consider
+    size_t min_size ;                             // minimal size of the frontiers to consider
+    gladys::frontier_detector::algo_t algo ;      // algo use to compute frontiers
+    double min_dist ;                             // minimal cost to the frontiers to consider (meter*[1-100])
+    double max_dist ;                             // maximal cost to the frontiers to consider (meter*[1-100])
 
-    bool dump = false ;                                 // enable/disable dumping 
-    std::string dumpdir = "/tmp" ;                           // path where to dump the data
+    bool dump ;                                   // enable/disable dumping 
+    std::string dumpdir ;                         // path where to dump the data
 
     /* hidden computing functions */
 

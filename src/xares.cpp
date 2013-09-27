@@ -23,7 +23,17 @@ namespace xares {
         //wm(_wm), 
         ng ( _wm),
         fd ( ng )
-    { }//}}}
+    {
+      max_nf = 10 ;                                // max nbr of frontiers to consider
+      min_size = 2 ;                               // minimal size of the frontiers to consider
+      algo = gladys::frontier_detector::WFD ;      // algo use to compute frontiers
+      min_dist = 1.6 ;                             // minimal cost to the frontiers to consider (meter*[1-100])
+      max_dist = 50.0 ;                            // maximal cost to the frontiers to consider (meter*[1-100])
+
+      dump = false ;                               // enable/disable dumping 
+      dumpdir = "/tmp" ;               // path where to dump the data
+
+    }//}}}
 
     /* computing functions */
 //
