@@ -29,8 +29,8 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
 
     std::string line, name ;
     gladys::points_t r_pos;
-    int n, max_nf ;
-    size_t min_size ;
+    int n, max_nf, x_origin, y_origin ;
+    size_t min_size, height_max, width_max ;
     double x, y, yaw, min_dist, max_dist ;
 
     //read data
@@ -63,10 +63,8 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     getline (dump_file,line) ;
     gladys::weight_map wm ( line );
 
-    dump_file.close();
-
     // weightmap : origin, size, scale
-    std::cerr << "[Xares repay] (x0,y0,xS,yS,W,H) = ("
+    std::cerr << "[Xares repay] weight map: (x0,y0,xS,yS,W,H) = ("
               << wm.get_utm_pose_x()<< ","
               << wm.get_utm_pose_y()<< ","
               << wm.get_scale_x()   << ","
@@ -75,9 +73,20 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
               << wm.get_width()     << ")"
               << std::endl;
 
+    // bounded area to explore
+    getline (dump_file,line) ;
+    std::istringstream iss4(line);
+    iss4 >> name >> x_origin >> y_origin >> height_max >> width_max ;
+    std::cerr << "[Xares replay] bounded area : (x0,y0,W,H) " 
+              << x_origin << "," << y_origin << "," 
+              << height_max << "," << width_max
+              << ")" << std::endl;
+
+    dump_file.close();
+
     // load the planner
     gettimeofday(&tv0, NULL);
-    xares::xares xp( wm );
+    xares::xares xp( wm, x_origin, y_origin, height_max, width_max );
     gettimeofday(&tv1, NULL);
 
     std::cerr << "[Xares replay] planner loaded ("

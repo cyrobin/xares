@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( test_frontier )
     // create a frontier exploration module from the map
     // (Create the weight_map, assumed to be good; cf other unit test)
     gladys::weight_map wm( region_path, robotm_path ) ;
-    xares::xares xm ( wm ) ;
+    xares::xares xm ( wm, -5,-5,20,20 ) ;
 
     // testing frontier detection with defult algorithm
     gladys::point_xy_t r1 {4,4};

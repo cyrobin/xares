@@ -19,10 +19,14 @@ namespace xares {
 /*{{{ xares class
  ****************************************************************************/
     /* constructor */
-    xares::xares( const gladys::weight_map& _wm ) : //{{{
+    xares::xares( const gladys::weight_map& _wm, //{{{
+                  int x_origin,
+                  int y_origin,
+                  size_t height_max,
+                  size_t width_max ) :
         //wm(_wm), 
         ng ( _wm),
-        fd ( ng )
+        fd ( ng, x_origin, y_origin, height_max, width_max )
     {
       max_nf = 10 ;                                // max nbr of frontiers to consider
       min_size = 2 ;                               // minimal size of the frontiers to consider

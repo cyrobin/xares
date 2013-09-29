@@ -66,12 +66,18 @@ private :
     /* internal parameters */
     size_t max_nf ;                               // max nbr of frontiers to consider
     size_t min_size ;                             // minimal size of the frontiers to consider
-    gladys::frontier_detector::algo_t algo ;      // algo use to compute frontiers
+    gladys::frontier_detector::algo_t algo ;      // algo used to compute frontiers
     double min_dist ;                             // minimal cost to the frontiers to consider (meter*[1-100])
     double max_dist ;                             // maximal cost to the frontiers to consider (meter*[1-100])
 
     bool dump ;                                   // enable/disable dumping 
     std::string dumpdir ;                         // path where to dump the data
+
+    // area to explore (generally smaller than the whole weightmap)
+    int x_origin ;                                // x origin of the area to explore
+    int y_origin ;                                // y origin of the area to explore
+    size_t height_max ;                           // height of the area to explore
+    size_t width_max ;                            // width of the area to explore
 
     /* hidden computing functions */
 
@@ -85,7 +91,11 @@ public:
      * @param wm the weight_map (gladys)
      *
      */
-    xares( const gladys::weight_map& _wm ) ;
+    xares( const gladys::weight_map& _wm,
+           int x_origin,
+           int y_origin,
+           size_t height_max,
+           size_t width_max ) ;
 
     /** reload new nav_graph and frontier detector
      * (from the same weight_map, assuming it has changed)
