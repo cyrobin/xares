@@ -1,6 +1,6 @@
 macro(add_xares_test name)
     add_executable(${name} ${name}.cpp)
-    target_link_libraries(${name} xares)
+    target_link_libraries(${name} xares )
     add_test(${name} ${name})
 endmacro()
 
