@@ -12,17 +12,17 @@
 
 #include <sstream>
 
-#include "gladys/gdal.hpp"          // required to create the models
+#include "gdalwrap/gdal.hpp"        // required to create the models
 #include "gladys/weight_map.hpp"    // required to create the models
 #include "xares/xares.hpp"
 
-BOOST_AUTO_TEST_SUITE( frontier )
+BOOST_AUTO_TEST_SUITE( test_xares )
 
-BOOST_AUTO_TEST_CASE( test_frontier )
+BOOST_AUTO_TEST_CASE( test_xares_planner )
 {
-    std::string region_path = "/tmp/test_frontier_detection.tif";
-    std::string weight_path = "/tmp/test_frontier_detection_weight.tif";
-    std::string robotm_path = "/tmp/robot.json";
+    std::string region_path = "/tmp/test_xares_region.tif";
+    std::string weight_path = "/tmp/test_xares_weight_map.tif";
+    std::string robotm_path = "/tmp/test_xares_robot.json";
 
     // create a robot model (JSON configuration file)
     std::ofstream robot_cfg(robotm_path);
@@ -36,39 +36,41 @@ BOOST_AUTO_TEST_CASE( test_frontier )
      *  O = obstacle
      *  S = seed (flat ; initial position)
      *
-     *       1 2 3 4 5 6 7 8 9
+     *       0 1 2 3 4 5 6 7 8
      *
-     *  1    U U U U U U U U U
+     *  0    U U U U U U U U U
+     *  1    F F F F F F F F F
      *  2    F F F F F F F F F
      *  3    F F F F F F F F F
-     *  4    F F F F F F F F F
-     *  5    F F F F S F F F F
-     *  6    F F F O O O F F F
+     *  4    F F F F S F F F F
+     *  5    F F F O O O F F F
+     *  6    F F F F F F F F F
      *  7    F F F F F F F F F
-     *  8    F F F F F F F F F
-     *  9    U U U U O U U U U
+     *  8    U U U U O U U U U
      *
      */
-    gladys::gdal region;
-    region.set_size(gladys::weight_map::N_RASTER, 9, 9);
-    region.bands[gladys::weight_map::FLAT    ].assign(9*9, 1);
+    gdalwrap::gdal region;
+    region.set_size(4, 9, 9);
+    region.bands[1].assign(9*9, 1);
+    // name bands
+    region.names = {"NO_3D_CLASS", "FLAT", "OBSTACLE", "ROUGH"};
     // add frontiers (top and bottom)
     for ( int i=0 ; i < 9 ; i++ ) {
-        region.bands[gladys::weight_map::FLAT       ][i    ] = 0. ;
-        region.bands[gladys::weight_map::NO_3D_CLASS][i    ] = 1  ;
-        region.bands[gladys::weight_map::FLAT       ][i+8*9] = 0. ;
-        region.bands[gladys::weight_map::NO_3D_CLASS][i+8*9] = 1  ;
+        region.bands[1][i    ] = 0. ;
+        region.bands[0][i    ] = 1  ;
+        region.bands[1][i+8*9] = 0. ;
+        region.bands[0][i+8*9] = 1  ;
     }
     // add ostacle #1 (middle)
-    region.bands[gladys::weight_map::FLAT    ][3+5*9] = 0.2 ;
-    region.bands[gladys::weight_map::OBSTACLE][3+5*9] = 0.8 ;
-    region.bands[gladys::weight_map::FLAT    ][4+5*9] = 0.2 ;
-    region.bands[gladys::weight_map::OBSTACLE][4+5*9] = 0.8 ;
-    region.bands[gladys::weight_map::FLAT    ][5+5*9] = 0.2 ;
-    region.bands[gladys::weight_map::OBSTACLE][5+5*9] = 0.8 ;
+    region.bands[1][3+5*9] = 0.2 ;
+    region.bands[2][3+5*9] = 0.8 ;
+    region.bands[1][4+5*9] = 0.2 ;
+    region.bands[2][4+5*9] = 0.8 ;
+    region.bands[1][5+5*9] = 0.2 ;
+    region.bands[2][5+5*9] = 0.8 ;
     // add ostacle #2 (bottom, centered)
-    region.bands[gladys::weight_map::FLAT    ][4+8*9] = 0.2 ;
-    region.bands[gladys::weight_map::OBSTACLE][4+8*9] = 0.8 ;
+    region.bands[1][4+8*9] = 0.2 ;
+    region.bands[2][4+8*9] = 0.8 ;
 
     region.save(region_path);
 
@@ -87,22 +89,22 @@ BOOST_AUTO_TEST_CASE( test_frontier )
     std::vector< gladys::f_attributes > attributes = xm.get_attributes() ;
 
    //Check the number of frontiers
-   BOOST_TEST_MESSAGE( "Nbr of frontiers : attributes.size() = " << attributes.size() );
-   BOOST_CHECK_EQUAL( attributes.size() , 2 );
+   BOOST_CHECK_MESSAGE( attributes.size() == 2,
+           "Nbr of frontiers : attributes.size() = " << attributes.size() );
 
    size_t c = 0 ;
    for ( auto& f : attributes )
        c += f.size ;
-   BOOST_TEST_MESSAGE( "Nbr of frontier points : c = " << c );
-   BOOST_CHECK_EQUAL( c , 18 );
+   BOOST_CHECK_MESSAGE( c == 18,
+           "Nbr of frontier points : c = " << c );
 
    // Goal should be (4,7) (the bottom frontier) and path size = 7
    gladys::point_xy_t goal = xm.get_goal().lookout ;
-   BOOST_TEST_MESSAGE( "Goal is ? " <<  goal[0] << "," << goal[1] );
-   BOOST_CHECK_EQUAL( goal[0], 4 );
-   BOOST_CHECK_EQUAL( goal[1], 7 );
-   BOOST_TEST_MESSAGE( "Path to the goal has size : " << xm.get_goal().path.size() );
-   BOOST_CHECK_EQUAL( xm.get_goal().path.size(), 7 );
+   BOOST_CHECK_MESSAGE( goal[0] == 8 && goal[1] == 7,
+           "Goal is ? " <<  goal[0] << "," << goal[1] );
+   
+   BOOST_CHECK_MESSAGE( xm.get_goal().path.size() == 9,
+           "Path to the goal has size : " << xm.get_goal().path.size() );
 
 }
 

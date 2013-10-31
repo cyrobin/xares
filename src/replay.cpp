@@ -174,7 +174,7 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
         // u = unknown
         // . = known
         // # = obstacle
-        double w = wm.get_weight_band()[ wm.idx_utm( gladys::point_xy_t {(double)i,(double)j} )];
+        double w = wm.get_weight_band()[ wm.index_utm( gladys::point_xy_t {(double)i,(double)j} )];
         if        (w == 100)  std::cerr << "u";
         else if   (w > 100 )  std::cerr << "#";
         else                  std::cerr << ".";
