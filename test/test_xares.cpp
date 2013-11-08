@@ -108,6 +108,7 @@ BOOST_AUTO_TEST_CASE( test_xares_planner )
 
 }
 
+//TODO test_xares_replay
 
 BOOST_AUTO_TEST_SUITE_END();
 
