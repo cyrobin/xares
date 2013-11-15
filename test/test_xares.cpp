@@ -42,11 +42,11 @@ BOOST_AUTO_TEST_CASE( test_xares_planner )
      *  1    F F F F F F F F F
      *  2    F F F F F F F F F
      *  3    F F F F F F F F F
-     *  4    F F F F S F F F F
-     *  5    F F F O O O F F F
-     *  6    F F F F F F F F F
+     *  4    F F O F F F F F F
+     *  5    F F O F F S F F F
+     *  6    F F O O O O O F F
      *  7    F F F F F F F F F
-     *  8    U U U U O U U U U
+     *  8    U U U O U U U U U
      *
      */
     gdalwrap::gdal region;
@@ -62,15 +62,17 @@ BOOST_AUTO_TEST_CASE( test_xares_planner )
         region.bands[0][i+8*9] = 1  ;
     }
     // add ostacle #1 (middle)
+    for ( int i=3 ; i < 7 ; i++ ) {
+        region.bands[1][i+6*9] = 0.2 ;
+        region.bands[2][i+6*9] = 0.8 ;
+    }
     region.bands[1][3+5*9] = 0.2 ;
     region.bands[2][3+5*9] = 0.8 ;
-    region.bands[1][4+5*9] = 0.2 ;
-    region.bands[2][4+5*9] = 0.8 ;
-    region.bands[1][5+5*9] = 0.2 ;
-    region.bands[2][5+5*9] = 0.8 ;
+    region.bands[1][3+4*9] = 0.2 ;
+    region.bands[2][3+4*9] = 0.8 ;
     // add ostacle #2 (bottom, centered)
-    region.bands[1][4+8*9] = 0.2 ;
-    region.bands[2][4+8*9] = 0.8 ;
+    region.bands[1][3+8*9] = 0.2 ;
+    region.bands[2][3+8*9] = 0.8 ;
 
     region.save(region_path);
 
@@ -80,8 +82,8 @@ BOOST_AUTO_TEST_CASE( test_xares_planner )
     xares::xares xm ( wm, -5,-5,20,20 ) ;
 
     // testing frontier detection with defult algorithm
-    gladys::point_xy_t r1 {4,4};
-    gladys::point_xy_t r2 {4,2};
+    gladys::point_xy_t r1 {5,5};
+    gladys::point_xy_t r2 {3,2};
     gladys::points_t r_pos {r1, r2} ;
     double yaw = 0 ;
     xm.plan( r_pos, yaw ) ;
@@ -103,7 +105,7 @@ BOOST_AUTO_TEST_CASE( test_xares_planner )
    BOOST_CHECK_MESSAGE( goal[0] == 8 && goal[1] == 7,
            "Goal is ? " <<  goal[0] << "," << goal[1] );
    
-   BOOST_CHECK_MESSAGE( xm.get_goal().path.size() == 9,
+   BOOST_CHECK_MESSAGE( xm.get_goal().path.size() == 7,
            "Path to the goal has size : " << xm.get_goal().path.size() );
 
 }
