@@ -64,7 +64,7 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     gladys::weight_map wm ( line );
 
     // weightmap : origin, size, scale
-    std::cerr << "[Xares repay] weight map: (x0,y0,xS,yS,W,H) = ("
+    std::cerr << "[Xares repay] weight map: (x0,y0,xSc,ySc,W,H) = ("
               << wm.get_utm_pose_x()<< ","
               << wm.get_utm_pose_y()<< ","
               << wm.get_scale_x()   << ","
@@ -155,10 +155,10 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     // foreach from (origin) to (dim+origin)
     for (int j = wm.get_utm_pose_y(); j < wm.get_width()  + wm.get_utm_pose_y(); j++)
     {
-      if ( j < -21 || j > 19 ) continue; //cropping
+      //if ( j < -21 || j > 19 ) continue; //cropping
       for (int i = wm.get_utm_pose_x(); i < wm.get_height() + wm.get_utm_pose_x(); i++)
       {
-        if ( i < 0 || i > 60 ) continue; //cropping
+        //if ( i < 0 || i > 60 ) continue; //cropping
         // Special points
         // O = origin
         // S = Seed
@@ -175,8 +175,8 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
         // . = known
         // # = obstacle
         double w = wm.get_weight_band()[ wm.index_utm( gladys::point_xy_t {(double)i,(double)j} )];
-        if        (w == 100)  std::cerr << "u";
-        else if   (w > 100 )  std::cerr << "#";
+        if        (w < 0)  std::cerr << "u"; //unknonwn
+        else if   (w > 100 )  std::cerr << "#"; //obstacle
         else                  std::cerr << ".";
 
       }
