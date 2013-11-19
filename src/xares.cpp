@@ -20,22 +20,22 @@ namespace xares {
  ****************************************************************************/
     /* constructor */
     xares::xares( const gladys::weight_map& _wm, //{{{
-                  int x_origin,
-                  int y_origin,
-                  size_t height_max,
-                  size_t width_max ) :
+                  double x_origin,
+                  double y_origin,
+                  double height_max,
+                  double width_max ) :
         //wm(_wm), 
         ng ( _wm),
         fd ( ng, x_origin, y_origin, height_max, width_max )
     {
       max_nf = 10 ;                                // max nbr of frontiers to consider
-      min_size = 2 ;                               // minimal size of the frontiers to consider
+      min_size = 2.0 ;                               // minimal size (meters) of the frontiers to consider
       algo = gladys::frontier_detector::WFD ;      // algo use to compute frontiers
-      min_dist = 1.6 ;                             // minimal cost to the frontiers to consider (meter*[1-100])
-      max_dist = 50.0 ;                            // maximal cost to the frontiers to consider (meter*[1-100])
+      min_dist = 1.6 ;                             // minimal cost to the frontiers to consider ( distance in meters * [1-100])
+      max_dist = 50.0 ;                            // maximal cost to the frontiers to consider ( distance in meters * [1-100])
 
       dump = false ;                               // enable/disable dumping 
-      dumpdir = "/tmp" ;               // path where to dump the data
+      dumpdir = "/tmp" ;                           // path where to dump the data
 
     }//}}}
 

@@ -65,7 +65,7 @@ private :
 
     /* internal parameters */
     size_t max_nf ;                               // max nbr of frontiers to consider
-    size_t min_size ;                             // minimal size of the frontiers to consider
+    double min_size ;                             // minimal size of the frontiers to consider
     gladys::frontier_detector::algo_t algo ;      // algo used to compute frontiers
     double min_dist ;                             // minimal cost to the frontiers to consider (meter*[1-100])
     double max_dist ;                             // maximal cost to the frontiers to consider (meter*[1-100])
@@ -74,10 +74,10 @@ private :
     std::string dumpdir ;                         // path where to dump the data
 
     // area to explore (generally smaller than the whole weightmap)
-    int x_origin ;                                // x origin of the area to explore
-    int y_origin ;                                // y origin of the area to explore
-    size_t height_max ;                           // height of the area to explore
-    size_t width_max ;                            // width of the area to explore
+    double x_origin ;                             // x (local) origin of the area to explore
+    double y_origin ;                             // y (local) origin of the area to explore
+    double height_max ;                           // height of the area to explore
+    double width_max ;                            // width of the area to explore
 
     /* hidden computing functions */
 
@@ -92,10 +92,10 @@ public:
      *
      */
     xares( const gladys::weight_map& _wm,
-           int x_origin,
-           int y_origin,
-           size_t height_max,
-           size_t width_max ) ;
+           double x_origin,
+           double y_origin,
+           double height_max,
+           double width_max ) ;
 
     /** reload new nav_graph and frontier detector
      * (from the same weight_map, assuming it has changed)
@@ -118,7 +118,7 @@ public:
      */
     int set_params(//{{{
         size_t _max_nf = 10,
-        size_t _min_size = 2, 
+        double _min_size = 2, 
         double _min_dist = 1.6,
         double _max_dist = 50.0,
         gladys::frontier_detector::algo_t _algo = gladys::frontier_detector::WFD
