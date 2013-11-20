@@ -18,6 +18,16 @@
 #include "gladys/point.hpp"
 #include "gladys/weight_map.hpp"
 
+// Colours (output)
+#define colour_bg_green  "\33[37;42m"
+#define colour_bg_yellow "\33[30;43m"
+#define colour_bg_blue   "\33[37;44m"
+#define colour_bg_red    "\33[37;41m"
+#define colour_fg_green  "\33[32;40m"
+#define colour_fg_blue   "\33[34;40m"
+#define colour_fg_red    "\33[31;40m"
+#define colour_reset     "\33[0m"
+
 int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
 
   std::ifstream dump_file;
@@ -157,6 +167,10 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     size_t indexG = wm.index_utm( curr ) ;  // goal
     size_t index_curr ;
 
+    //std::cerr << index0 << " (0,0)" << std::endl;
+    //std::cerr << indexS << " (" << r_pos[0][0] << "," << r_pos[0][1] << ")" << std::endl;
+    //std::cerr << indexG << " (" << curr[0] << "," << curr[1] << ")" << std::endl;
+
     // foreach from (origin) to (dim+origin)
     for ( double j = wm.get_utm_pose_y(); j < wm.get_width()*wm.get_scale_y() + wm.get_utm_pose_y(); j+= wm.get_scale_y() )
     {
@@ -164,7 +178,7 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
       for (double i = wm.get_utm_pose_x(); i < wm.get_height()*wm.get_scale_x() + wm.get_utm_pose_x(); i+= wm.get_scale_x() )
       {
         if ( i < x_origin || i > height_max ) continue; //cropping
-        
+
         index_curr = wm.index_utm( gladys::point_xy_t {(double)i,(double)j} );
 
         // Special points
@@ -172,24 +186,26 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
         // S = Seed
         // G = Goal
         if ( index_curr == index0 ) { // origin
-            std::cerr << "O"; continue; }
+            std::cerr << colour_bg_yellow << "O"; continue; }
         if ( index_curr == indexS ) { // seed
-            std::cerr << "S"; continue; }
+            std::cerr << colour_bg_green  << "S"; continue; }
         if ( index_curr == indexG ) { // goal
-            std::cerr << "G"; continue;}
+            std::cerr << colour_bg_red << "G"; continue;}
 
         // Common points
         // u = unknown
         // . = known
         // # = obstacle
         double w = wm.get_weight_band()[ index_curr ];
-        if        (w < 0)     std::cerr << "u"; //unknonwn
-        else if   (w > 100 )  std::cerr << "#"; //obstacle
-        else                  std::cerr << ".";
+        if        (w < 0)     std::cerr << colour_fg_blue  << "u"; //unknonwn
+        else if   (w > 100 )  std::cerr << colour_fg_red   << "#"; //obstacle
+        else                  std::cerr << colour_fg_green << ".";
 
       }
       std::cerr << std::endl;
     }
+
+    std::cerr << colour_reset << std::endl;
   }
   else {
     std::cerr << "[Xares replay] Cannot open provided dump file. :-(" << std::endl;
