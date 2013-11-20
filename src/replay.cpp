@@ -131,10 +131,11 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     //get planned path
     const gladys::path_t& path = xp.get_goal().path ;
 
-    for (unsigned int i = 0 ; i < path.size() ; i++)
-      std::cerr   << "[Xares replay ] ----waypoint #" << i 
-                  << " = (" << path[i][0]<< "," << path[i][1] 
-                  <<")"<<std::endl;
+    // display full computed path (before prunning)
+    //for (unsigned int i = 0 ; i < path.size() ; i++)
+      //std::cerr   << "[Xares replay ] ----waypoint #" << i 
+                  //<< " = (" << path[i][0]<< "," << path[i][1] 
+                  //<<")"<<std::endl;
 
     // get poster path
     gladys::path_t::const_iterator it;

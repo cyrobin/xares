@@ -75,10 +75,16 @@ namespace xares {
         // check is there are indeed valuable frontiers
         if ( attributes.size() == 0 )
             return XARES_NO_FRONTIER;
+        // TODO check if NO_Frontier is a pb, or if exploration is done
+        // TODO return a % of discovery / exploration done.
 
         /* choose one */
         // sort the frontiers attributes according to a specific decision criteria
         std::sort( attributes.begin(), attributes.end(), decision_making );
+
+        // Verbose : display sorted frontiers attributes
+        for ( auto a : attributes )
+            std::cerr << a << std::endl;
 
         goal = attributes.front() ;
 
