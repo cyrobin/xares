@@ -167,17 +167,16 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     size_t indexG = wm.index_utm( curr ) ;  // goal
     size_t index_curr ;
 
-    //std::cerr << index0 << " (0,0)" << std::endl;
-    //std::cerr << indexS << " (" << r_pos[0][0] << "," << r_pos[0][1] << ")" << std::endl;
-    //std::cerr << indexG << " (" << curr[0] << "," << curr[1] << ")" << std::endl;
+    double y_max = y_origin + width_max ;
+    double x_max = x_origin + height_max ;
 
     // foreach from (origin) to (dim+origin)
     for ( double j = wm.get_utm_pose_y(); j < wm.get_width()*wm.get_scale_y() + wm.get_utm_pose_y(); j+= wm.get_scale_y() )
     {
-      if ( j < y_origin || j > width_max ) continue; //cropping
+      if ( j < y_origin || j > y_max ) continue; //cropping
       for (double i = wm.get_utm_pose_x(); i < wm.get_height()*wm.get_scale_x() + wm.get_utm_pose_x(); i+= wm.get_scale_x() )
       {
-        if ( i < x_origin || i > height_max ) continue; //cropping
+        if ( i < x_origin || i > x_max ) continue; //cropping
 
         index_curr = wm.index_utm( gladys::point_xy_t {(double)i,(double)j} );
 
