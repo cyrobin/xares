@@ -16,8 +16,12 @@
 #include "gladys/nav_graph.hpp"
 #include "gladys/frontier_exploration.hpp"
 
-#ifndef YAW_DIFF_SENSIBILITY
-#define YAW_DIFF_SENSIBILITY 0.8 // about PI/4, max diff being Pi
+//#ifndef YAW_DIFF_SENSIBILITY
+//#define YAW_DIFF_SENSIBILITY 0.8 // about PI/4, max diff being Pi
+//#endif
+
+#ifndef RATIO_SENSIBILITY
+#define RATIO_SENSIBILITY 0.01 // TODO tune finely
 #endif
 
 namespace xares {
@@ -33,15 +37,16 @@ struct {//{{{
 
         // First criteria is proximity (the lesser, the better)
         if (l.proximity == r.proximity ) {
-            // 2nd criteria is yaw difference :
-            if ( fabs( l.yaw_diff - r.yaw_diff) < YAW_DIFF_SENSIBILITY )
-                // 3rd & 4th criterias are :
-                // - size (the bigger, the better)
-                // - and cost (distance) : the cheaper, the better
-                // We use a ratio
-                //return (r.size * r.size * l.cost) < ( l.size * l.size * r.cost);
-                return (r.size * l.cost) < ( l.size * r.cost);
-            return ( l.yaw_diff < r.yaw_diff );
+            // 2nd & 3rd criterias are :
+            // - size (the bigger, the better)
+            // - and cost (distance) : the cheaper, the better
+            // We use a ratio
+            // see also (r.size * r.size * l.cost) < ( l.size * l.size * r.cost) ?
+            if ( fabs( r.size * l.cost - l.size * r.cost ) < RATIO_SENSIBILITY )
+                // 4th criteria is yaw difference :
+                return ( l.yaw_diff < r.yaw_diff );
+
+            return r.size * l.cost < l.size * r.cost ;
         }
         return l.proximity < r.proximity ;
     }
