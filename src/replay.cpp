@@ -29,10 +29,10 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
 
     std::string line, name ;
     gladys::points_t r_pos;
-    int n, max_nf, x_origin, y_origin ;
-    size_t min_size, height_max, width_max ;
+    int n, max_nf ;
+    double min_size, x_origin, y_origin, height_max, width_max ;
     double x, y, yaw, min_dist, max_dist ;
-
+    
     //read data
     getline (dump_file,line) ;
     std::istringstream iss1(line);
@@ -153,11 +153,12 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     // ASCII plot of weightmap, seed & goal
     std::cerr   << "[Xares replay ] ASCII weight map : " << std::endl; 
     // foreach from (origin) to (dim+origin)
-    for (int j = wm.get_utm_pose_y(); j < wm.get_width()  + wm.get_utm_pose_y(); j++)
+    for ( double j = wm.get_utm_pose_y(); j < wm.get_width()*wm.get_scale_y() + wm.get_utm_pose_y(); j+= wm.get_scale_y() )
     {
       //if ( j < -21 || j > 19 ) continue; //cropping
-      for (int i = wm.get_utm_pose_x(); i < wm.get_height() + wm.get_utm_pose_x(); i++)
+      for (double i = wm.get_utm_pose_x(); i < wm.get_height()*wm.get_scale_x() + wm.get_utm_pose_x(); i+= wm.get_scale_x() )
       {
+
         //if ( i < 0 || i > 60 ) continue; //cropping
         // Special points
         // O = origin
