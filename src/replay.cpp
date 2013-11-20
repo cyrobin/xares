@@ -152,31 +152,38 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
 
     // ASCII plot of weightmap, seed & goal
     std::cerr   << "[Xares replay ] ASCII weight map : " << std::endl; 
+    size_t index0 = wm.index_utm( gladys::point_xy_t { 0.0 , 0.0 } ) ; //origin
+    size_t indexS = wm.index_utm( r_pos[0] ) ; // seed (robot position)
+    size_t indexG = wm.index_utm( curr ) ;  // goal
+    size_t index_curr ;
+
     // foreach from (origin) to (dim+origin)
     for ( double j = wm.get_utm_pose_y(); j < wm.get_width()*wm.get_scale_y() + wm.get_utm_pose_y(); j+= wm.get_scale_y() )
     {
-      //if ( j < -21 || j > 19 ) continue; //cropping
+      if ( j < y_origin || j > width_max ) continue; //cropping
       for (double i = wm.get_utm_pose_x(); i < wm.get_height()*wm.get_scale_x() + wm.get_utm_pose_x(); i+= wm.get_scale_x() )
       {
+        if ( i < x_origin || i > height_max ) continue; //cropping
+        
+        index_curr = wm.index_utm( gladys::point_xy_t {(double)i,(double)j} );
 
-        //if ( i < 0 || i > 60 ) continue; //cropping
         // Special points
         // O = origin
         // S = Seed
         // G = Goal
-        if ( i == 0 && j == 0 ) { // origin
+        if ( index_curr == index0 ) { // origin
             std::cerr << "O"; continue; }
-        if ( i == r_pos[0][0] && j == r_pos[0][1] ) { // seed
+        if ( index_curr == indexS ) { // seed
             std::cerr << "S"; continue; }
-        if ( i == curr[0] && j == curr[1] ) { // goal
+        if ( index_curr == indexG ) { // goal
             std::cerr << "G"; continue;}
 
         // Common points
         // u = unknown
         // . = known
         // # = obstacle
-        double w = wm.get_weight_band()[ wm.index_utm( gladys::point_xy_t {(double)i,(double)j} )];
-        if        (w < 0)  std::cerr << "u"; //unknonwn
+        double w = wm.get_weight_band()[ index_curr ];
+        if        (w < 0)     std::cerr << "u"; //unknonwn
         else if   (w > 100 )  std::cerr << "#"; //obstacle
         else                  std::cerr << ".";
 
