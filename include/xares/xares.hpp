@@ -70,7 +70,8 @@ private :
 
     /* internal parameters */
     size_t max_nf ;                               // max nbr of frontiers to consider
-    double min_size ;                             // minimal size of the frontiers to consider
+    double frontier_min_size ;                    // minimal size of the frontiers to consider
+    double frontier_max_size ;                    // maximal size of the frontiers to consider
     gladys::frontier_detector::algo_t algo ;      // algo used to compute frontiers
     double min_dist ;                             // minimal cost to the frontiers to consider (meter*[1-100])
     double max_dist ;                             // maximal cost to the frontiers to consider (meter*[1-100])
@@ -115,21 +116,22 @@ public:
      * Keep the internal data.
      *
      * @param _max_nf : max nbr of frontiers to consider
-     *
-     * @param _min_size : minimal size of the frontier to consider
-     *
+     * @param _frontier_min_size : minimal size of the frontier to consider
+     * @param _frontier_max_size : maximal size of the frontier to consider
      * @param _algo : algo use to compute frontiers
      *
      */
     int set_params(//{{{
         size_t _max_nf = 10,
-        double _min_size = 2, 
+        double _frontier_min_size = 2.0, 
+        double _frontier_max_size = 30.0, 
         double _min_dist = 1.6,
         double _max_dist = 50.0,
         gladys::frontier_detector::algo_t _algo = gladys::frontier_detector::WFD
     ){
         max_nf      = _max_nf ;
-        min_size    = _min_size ;
+        frontier_min_size    = _frontier_min_size ;
+        frontier_max_size    = _frontier_max_size ;
         min_dist    = _min_dist ;
         max_dist    = _max_dist ;
         algo        = _algo ;

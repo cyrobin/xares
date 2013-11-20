@@ -40,7 +40,8 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     std::string line, name ;
     gladys::points_t r_pos;
     int n, max_nf ;
-    double min_size, x_origin, y_origin, height_max, width_max ;
+    double frontier_min_size, frontier_max_size, x_origin, y_origin, \
+        height_max, width_max ;
     double x, y, yaw, min_dist, max_dist ;
     
     //read data
@@ -63,10 +64,11 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
     // load and display internal params
     getline (dump_file,line) ;
     std::istringstream iss3(line);
-    iss3 >> name >> max_nf >> min_size >> min_dist >> max_dist ;
+    iss3 >> name >> max_nf >> frontier_min_size >> frontier_max_size \
+        >> min_dist >> max_dist ;
     std::cerr << "[Xares replay] internal params "
-              << "(max_nf,min_size,min_dist,max_dist) = ("
-              << max_nf << "," << min_size << "," << min_dist << "," << max_dist 
+              << "(max_nf,frontier_min_size,frontier_max_size,min_dist,max_dist) = ("
+              << max_nf << "," << frontier_min_size << "," << frontier_max_size << "," << min_dist << "," << max_dist 
               << ")" << std::endl;
 
     std::cerr << "[Xares replay] max nbr of frontiers = " << max_nf << std::endl;
@@ -104,7 +106,7 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
               (tv1.tv_usec - tv0.tv_usec) / 1000 << " ms)." << std::endl;
 
     // Set internal parameters for xares
-    xp.set_params( max_nf, min_size, min_dist, max_dist );
+    xp.set_params( max_nf, frontier_min_size, frontier_max_size, min_dist, max_dist );
     std::cerr << "[Xares replay] parameters settled. Let's plan !" << std::endl;
 
     //plan (=replay !)
@@ -177,7 +179,7 @@ int replay_genom_dump( const std::string& path_to_dump_file) {//{{{
       if ( j < y_origin || j > y_max ) continue; //cropping
       for (double i = wm.get_utm_pose_x(); i < wm.get_height()*wm.get_scale_x() + wm.get_utm_pose_x(); i+= wm.get_scale_x() )
       {
-        if ( i < x_origin || i > x_max ) continue; //cropping
+        if ( i < x_origin+6 || i > x_max ) continue; //cropping
 
         index_curr = wm.index_utm( gladys::point_xy_t {(double)i,(double)j} );
 

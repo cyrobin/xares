@@ -29,7 +29,8 @@ namespace xares {
         fd ( ng, x_origin, y_origin, height_max, width_max )
     {
       max_nf = 10 ;                                // max nbr of frontiers to consider
-      min_size = 2.0 ;                               // minimal size (meters) of the frontiers to consider
+      frontier_min_size = 2.0 ;                    // minimal size (meters) of the frontiers to consider
+      frontier_max_size = 30.0 ;                   // minimal size (meters) of the frontiers to consider
       algo = gladys::frontier_detector::WFD ;      // algo use to compute frontiers
       min_dist = 1.6 ;                             // minimal cost to the frontiers to consider ( distance in meters * [1-100])
       max_dist = 50.0 ;                            // maximal cost to the frontiers to consider ( distance in meters * [1-100])
@@ -60,7 +61,8 @@ namespace xares {
         /* compute frontiers and attributes */
         std::cerr << "[Xares] Computing frontiers... " << std::endl ;
         try {
-            fd.compute_frontiers( r_pos, yaw, max_nf, min_size, min_dist, max_dist, algo ) ;
+            fd.compute_frontiers( r_pos, yaw, max_nf, frontier_min_size, frontier_max_size, \
+                    min_dist, max_dist, algo ) ;
         } catch (std::exception& e) {
             std::cerr << "[Xares] catch exception : " << e.what() << std::endl ;
             std::cerr << "[Xares] Fail to compute the frontiers: please check your data." << std::endl ;
